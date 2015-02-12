@@ -188,7 +188,13 @@ public class BLE extends CordovaPlugin implements LeScanCallback {
 	private void stopScan(final CordovaArgs args, final CallbackContext callbackContext) {
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 		adapter.stopLeScan(this);
-		mScanCallbackContext = null;
+		if(mScanCallbackContext != null) {
+	            PluginResult r = new PluginResult(PluginResult.Status.NO_RESULT); //// NO_RESULT should depend on the plugin spec
+            	    r.setKeepCallback(false);
+                    mScanCallbackContext.sendPluginResult(r); // Deque startScan callback context
+                    mScanCallbackContext = null;
+        	}
+        	callbackContext.success(); //// should depend on the plugin spec. 
 	}
 
 	private void connect(final CordovaArgs args, final CallbackContext callbackContext) {
